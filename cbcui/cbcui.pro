@@ -48,7 +48,9 @@ HEADERS += src/MainWindow.h \
     src/MotorTest.h \
     src/SerialPort.h \
     src/SerialServer.h \
-    src/Brightness.h
+    src/Brightness.h \
+    src/BetaServer.h \
+    src/SerialCommunicator.h
 FORMS += ui/MainWindow.ui \
     ui/MainMenu.ui \
     ui/Programs.ui \
@@ -101,7 +103,8 @@ SOURCES += src/main.cpp \
     src/MotorTest.cpp \
     src/SerialPort.cpp \
     src/SerialServer.cpp \
-    src/Brightness.cpp
+    src/Brightness.cpp \
+    src/BetaServer.cpp
 
 # Vision
 FORMS += src/vision/AdjustColorWidget.ui

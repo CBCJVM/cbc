@@ -28,21 +28,14 @@
 #include <QDataStream>
 
 #include "SerialPort.h"
+#include "SerialCommunicator.h"
 
 typedef struct {
     QStringList filenames;
     QVector<int> filesizes;
 } CBCSerialHeader;
 
-#define SERIAL_MESSAGE_OK   ((quint8)1)
-#define SERIAL_MESSAGE_FAIL ((quint8)2)
-#define SERIAL_START        ((quint16)0xCBC)
-
-#define HEADER_KEY (quint32)(0xB07BA11)
-#define SERIAL_DEVICE "/dev/uart0"
-#define TEMP_PATH "/tmp/upload"
-
-class SerialServer : public QThread
+class SerialServer : public SerialCommunicator
 {
     Q_OBJECT
 

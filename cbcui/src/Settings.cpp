@@ -49,6 +49,7 @@ Settings::Settings(QWidget *parent) : Page(parent), m_brightness(parent)
 
     QSettings settings("/mnt/user/cbc_v2.config",QSettings::NativeFormat);
     ui_consoleShowBox->setChecked(settings.value("consoleShowOnRun", true).toBool());
+    ui_useBeta->setChecked(settings.value("useBetaServer", false).toBool());
 }
 
 Settings::~Settings()
@@ -113,6 +114,15 @@ void Settings::on_ui_consoleShowBox_clicked(bool checked)
     QSettings settings("/mnt/user/cbc_v2.config",QSettings::NativeFormat);
 
     settings.setValue("consoleShowOnRun",checked);
+    settings.sync();
+    ::system("sync");
+    ::system("sync");
+}
+
+void Settings::on_ui_useBeta_clicked(bool checked = false)
+{
+    QSettings settings("/mnt/user/cbc_v2.config",QSettings::NativeFormat);
+    settings.setValue("useBetaServer",checked);
     settings.sync();
     ::system("sync");
     ::system("sync");
