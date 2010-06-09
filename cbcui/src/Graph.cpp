@@ -25,7 +25,6 @@
 #include <QPainter>
 #include <QRect>
 #include <QString>
-#include <QMessageBox>
 
 #define ACCSCALE8BIT    127
 #define ACCSCALE16BIT   32768
@@ -35,7 +34,7 @@
 #define ANGOFF          512
 #define MINREFRESH      10
 
-Graph::Graph(QWidget *parent) : Page(parent)
+Graph::Graph(QWidget *parent) : Page(parent, true)
 {
     setupUi(this);
 
@@ -75,14 +74,11 @@ void Graph::hide()
 void Graph::on_ui_delTimeLine_selectionChanged()
 {
     int ms;
-    Keypad user_keypad(this);
+    Keypad user_keypad(this,10,60000);
     ui_delTimeLine->setStyleSheet("QLineEdit#ui_delTimeLine{background-color:red}");
     user_keypad.exec();
 
     ms = user_keypad.getValue();
-
-    if(ms < MINREFRESH)
-        ms = MINREFRESH;
 
     ui_delTimeLine->setStyleSheet("QLineEdit#ui_delTimeLine{background-color:white}");
     ui_delTimeLine->setText(QString::number(ms));

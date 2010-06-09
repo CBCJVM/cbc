@@ -21,9 +21,11 @@
 #ifndef __SETTINGS_H__
 #define __SETTINGS_H__
 
+#include <QSettings>
 #include "ui_Settings.h"
 #include "Page.h"
 #include "Brightness.h"
+#include "Volume.h"
 
 class Settings : public Page, private Ui::Settings
 {
@@ -47,7 +49,9 @@ public slots:
     void loadAccelCal();
 
 private:
-    Brightness m_brightness;
+    QSettings   m_settings;
+    Brightness  m_brightness;
+    Volume      m_volume;
 };
 
 #endif

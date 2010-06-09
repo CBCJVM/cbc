@@ -21,11 +21,14 @@
 #include "Settings.h"
 #include "CbobData.h"
 #include <QFile>
-#include <QSettings>
 #include <QMessageBox>
 #include <QDir>
 
-Settings::Settings(QWidget *parent) : Page(parent), m_brightness(parent)
+Settings::Settings(QWidget *parent) :
+        Page(parent),
+        m_settings("/mnt/user/cbc_v2.config",QSettings::NativeFormat),
+        m_brightness(parent),
+        m_volume(parent)
 {
     setupUi(this);
 
@@ -34,22 +37,21 @@ Settings::Settings(QWidget *parent) : Page(parent), m_brightness(parent)
     QObject::connect(ui_resetPIDButton, SIGNAL(clicked()), this, SLOT(resetPID()));
     QObject::connect(ui_cameraDefaultButton, SIGNAL(clicked()), this, SLOT(setCameraDefault()));
     QObject::connect(ui_brightnessButton, SIGNAL(clicked()), &m_brightness, SLOT(raisePage()));
+    QObject::connect(ui_volumeButton, SIGNAL(clicked()), &m_volume, SLOT(raisePage()));
 
-    if(!QFile::exists("/mnt/user/cbc_v2.config")){
-        storePidCal();
-        storeAccelCal();
-        this->resetPID();
-        ::system("sync");
-        ::system("sync");
-    }
-    else {
-        loadPidCal();
-        loadAccelCal();
-    }
+    if(m_settings.contains("motorCal0")) loadPidCal();
+    else storePidCal();
+    if(m_settings.contains("accelCal0")) loadAccelCal();
+    else storeAccelCal();
+    m_settings.beginGroup("PIDgainsMotor0");
+    if(!m_settings.contains("ProportionalMult")) resetPID();
+    m_settings.endGroup();
 
-    QSettings settings("/mnt/user/cbc_v2.config",QSettings::NativeFormat);
-    ui_consoleShowBox->setChecked(settings.value("consoleShowOnRun", true).toBool());
-    ui_useBeta->setChecked(settings.value("useBetaServer", false).toBool());
+    ::system("sync");
+    ::system("sync");
+
+    ui_consoleShowBox->setChecked(m_settings.value("consoleShowOnRun", true).toBool());
+    ui_useBeta->setChecked(m_settings.value("useBetaServer", false).toBool());
 }
 
 Settings::~Settings()
@@ -111,15 +113,13 @@ void Settings::setCameraDefault()
 
 void Settings::on_ui_consoleShowBox_clicked(bool checked)
 {
-    QSettings settings("/mnt/user/cbc_v2.config",QSettings::NativeFormat);
-
-    settings.setValue("consoleShowOnRun",checked);
-    settings.sync();
+    m_settings.setValue("consoleShowOnRun",checked);
+    m_settings.sync();
     ::system("sync");
     ::system("sync");
 }
 
-void Settings::on_ui_useBeta_clicked(bool checked = false)
+void Settings::on_ui_useBeta_clicked(bool checked)
 {
     QSettings settings("/mnt/user/cbc_v2.config",QSettings::NativeFormat);
     settings.setValue("useBetaServer",checked);
@@ -130,11 +130,10 @@ void Settings::on_ui_useBeta_clicked(bool checked = false)
 
 void Settings::loadAccelCal()
 {
-    QSettings settings("/mnt/user/cbc_v2.config",QSettings::NativeFormat);
     short data[3];
 
     for(int i = 0;i < 3;i++) {
-        data[i] = settings.value("accelCal" + QString::number(i)).toInt();
+        data[i] = m_settings.value("accelCal" + QString::number(i)).toInt();
     }
 
     CbobData::instance()->accelerometerSetCal(data);
@@ -142,23 +141,22 @@ void Settings::loadAccelCal()
 
 void Settings::storeAccelCal()
 {
-    QSettings settings("/mnt/user/cbc_v2.config",QSettings::NativeFormat);
     short data[3];
 
     CbobData::instance()->accelerometerGetCal(data);
 
     for(int i = 0;i < 3;i++) {
-        settings.setValue("accelCal" + QString::number(i), data[i]);
+        m_settings.setValue("accelCal" + QString::number(i), data[i]);
     }
+    m_settings.sync();
 }
 
 void Settings::loadPidCal()
 {
-    QSettings settings("/mnt/user/cbc_v2.config",QSettings::NativeFormat);
     short data[4];
 
     for(int i = 0;i < 4;i++) {
-        data[i] = settings.value("motorCal" + QString::number(i)).toInt();
+        data[i] = m_settings.value("motorCal" + QString::number(i)).toInt();
     }
 
     CbobData::instance()->motorsSetCal(data);
@@ -166,13 +164,13 @@ void Settings::loadPidCal()
 
 void Settings::storePidCal()
 {
-    QSettings settings("/mnt/user/cbc_v2.config",QSettings::NativeFormat);
     short data[4];
 
     CbobData::instance()->motorsGetCal(data);
 
     for(int i = 0;i < 4;i++) {
-        settings.setValue("motorCal"+QString::number(i), data[i]);
+        m_settings.setValue("motorCal"+QString::number(i), data[i]);
     }
+    m_settings.sync();
 }
 

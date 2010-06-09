@@ -1,5 +1,5 @@
 #Onurs address pass:RouterAdm1n
-#CBC_IP=192.168.1.69
+#CBC_IP=192.168.1.75
 #KIPR address
 CBC_IP=192.168.123.173
 make &&
