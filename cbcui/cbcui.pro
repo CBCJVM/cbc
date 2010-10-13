@@ -49,6 +49,8 @@ HEADERS += src/MainWindow.h \
     src/SerialPort.h \
     src/SerialServer.h \
     src/Brightness.h \
+    src/BetaServer.h \
+    src/SerialCommunicator.h \
     src/Wifi.h \
     src/WirelessAdapter.h \
     src/Volume.h
@@ -107,6 +109,7 @@ SOURCES += src/main.cpp \
     src/SerialPort.cpp \
     src/SerialServer.cpp \
     src/Brightness.cpp \
+    src/BetaServer.cpp \
     src/Wifi.cpp \
     src/WirelessAdapter.cpp \
     src/Volume.cpp

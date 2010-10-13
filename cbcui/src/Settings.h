@@ -41,7 +41,7 @@ public slots:
     void resetPID();
     void setCameraDefault();
     void on_ui_consoleShowBox_clicked(bool checked = true);
-
+    void on_ui_useBeta_clicked(bool checked = false);
     void storePidCal();
     void loadPidCal();
 

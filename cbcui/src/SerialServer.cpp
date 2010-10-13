@@ -27,8 +27,7 @@
 #include <QDir>
 #include <QProcess>
 
-SerialServer::SerialServer(QObject *parent) : QThread(parent), 
-                                              m_port(SERIAL_DEVICE, this),
+SerialServer::SerialServer(QObject *parent) : m_port(SERIAL_DEVICE, 0),
                                               m_stream(&m_port),
                                               m_quit(false)
 {

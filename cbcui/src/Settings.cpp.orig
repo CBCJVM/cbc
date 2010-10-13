@@ -50,8 +50,13 @@ Settings::Settings(QWidget *parent) :
     ::system("sync");
     ::system("sync");
 
+<<<<<<< HEAD
+    QSettings settings("/mnt/user/cbc_v2.config",QSettings::NativeFormat);
+    ui_consoleShowBox->setChecked(settings.value("consoleShowOnRun", true).toBool());
+    ui_useBeta->setChecked(settings.value("useBetaServer", false).toBool());
+=======
     ui_consoleShowBox->setChecked(m_settings.value("consoleShowOnRun", true).toBool());
-    ui_useBeta->setChecked(m_settings.value("useBetaServer", false).toBool());
+>>>>>>> 0bc23e13ceed2938f304fd62df8dccfae1eeff0b
 }
 
 Settings::~Settings()
@@ -119,7 +124,7 @@ void Settings::on_ui_consoleShowBox_clicked(bool checked)
     ::system("sync");
 }
 
-void Settings::on_ui_useBeta_clicked(bool checked)
+void Settings::on_ui_useBeta_clicked(bool checked = false)
 {
     QSettings settings("/mnt/user/cbc_v2.config",QSettings::NativeFormat);
     settings.setValue("useBetaServer",checked);
